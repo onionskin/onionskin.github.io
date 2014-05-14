@@ -184,36 +184,305 @@
   <section id="onionskin-pool-constructor">
     <h1>new OnionSkin.Pool([drivers])</h1>
     <p>
+      Create a new cache pool that will manage the givern drivers
     </p>
+
+    <section class="aliases">
+      <h1>Aliases</h1>
+      <p>new OnionSkin([drivers])</p>
+    </section>
+
+    <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">[drivers]</span>
+          (Driver|Driver[]): The drivers that will be managed by the created pool
+        </li>
+      </ol>
+    </section>
+    <section class="return">
+      <h1>Returns</h1>
+      (Pool): A new pool
+    </section>
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        var pool = new OnionSkin();
+        var pool = new OnionSkin([driver1, driver2]);
+      </pre>
+    </section>
   </section>
+
   <section id="onionskin-pool-getitem">
     <h1>pool.getItem(key)</h1>
+    <p>
+      Fetch an
+      <a href="#onionskin-item">Item</a>
+      from the pool
+    </p>
+
+    <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">key</span>
+          (String|Array): The key for the cache data
+        </li>
+      </ol>
+    </section>
+
+    <section class="return">
+      <h1>Returns</h1>
+      (Item): The Item fetched
+    </section>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        var item = pool.getItem('user/1');
+        item.get(); // get item's actual data
+      </pre>
+    </section>
   </section>
+
   <section id="onionskin-pool-flush">
     <h1>pool.flush()</h1>
+    <p>
+      Flush the entire cache pool.
+      It will basically call
+      <a href="#onionskin-drivers-flush">driver.flush</a>
+      on each driver
+    </p>
+
+    <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A promise that will be resolved when all drivers have been flushed
+    </section>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        var pool = new OnionSkin();
+        pool.flush();
+      </pre>
+    </section>
   </section>
+
   <section id="onionskin-pool-get">
-    <h1>pool.get(key, [cachePolicy, [policyData]])</h1>
+    <h1>pool.get(key, [cachePolicy], [policyData])</h1>
+    <p>
+      A shortcut for pool.getItem + item.get + item.isMiss + item.lock
+    </p>
+    
+    <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">key</span>
+          (String|Array): The key to be fetched
+        </li>
+        <li>
+          <span class="name">cachePolicy</span>
+          The
+          <a href="#onionskin-item=cachepolicies">Cache Policy</a>
+          to be used - defaults to CP_NONE
+        </li>
+        <li>
+          <span class="name">policyData</span>
+          (*): The value for the cache policy, if it needs one.
+          <a href="#onionskin-item-cachepolicies">more</a>
+        </li>
+      </ol>
+    </section>
+    
+    <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A promise that will be reject if that cache is missed or resolved with the item's data
+    </section>
+    
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        pool.get('user/facebook_data').catch(function (err) {
+          // Cache is missing
+          return fetchData().then(this.save);
+        });
+      </pre>
+    </section>
   </section>
 </section>
 
 <section id="onionskin-item">
   <section id="onionskin-item-constructor">
     <h1>new OnionSkin.Item(key, pool)</h1>
-  </section>
-  <section id="onionskin-item-cachepolicies">
-    <h1>Cache Policies</h1>
-    <section id="onionskin-item-cpnone">
+    <p>
+      Constructor used internally on
+      <a href="#onionskin-pool-getitem">pool.getitem</a>
+      calls
+    </p>
+
+    <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">key</span>
+          (String|Array): The cache key that this Item will represent
+        </li>
+        <li>
+          <span class="name">pool</span>
+          (Pool): The pool where this key will be contained
+        </li>
+      </ol>
+    </section>
+
+    <section class="returns">
+      <h1>Returns</h1>
+      (Item): the created instance of Item
+    </section>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        var pool = new OnionSkin();
+        var item = new Item(key, pool); // Same as pool.getItem(key)
+      </pre>
     </section>
   </section>
+
+  <section id="onionskin-item-cachepolicies">
+    <h1>Cache Policies</h1>
+    <p>
+      There are 4 cache policies that will affect how OnionSkin interprets cache
+      locks and thereof the behavior of 
+      <a href="#onionskin-item-ismissed">isMissed</a>
+      method
+    </p>
+
+    <section id="onionskin-item-cpnone">
+      <h1>OnionSkin.Item.CP_NONE</h1>
+      <p>
+        Ignore completely whether the cache is locked or not.
+        Will always return true for an expired cached.
+      </p>
+      <section class="aliases">
+        <h1>Aliases</h1>
+        <p>OnionSkin.CP_NONE</p>
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          item.get(OnionSkin.CP_NONE);
+          item.get(OnionSkin.Item.CP_NONE);
+        </pre>
+      </section>
+    </section>
+
+    <section id="onionskin-item-cpold">
+      <h1>OnionSkin.Item.CP_OLD</h1>
+      <p>
+        isMissed will return false for an expired cache ifsome other instance is
+        already generating this cache, e.g. this cache key is locked
+      </p>
+      <section class="aliases">
+        <h1>Aliases</h1>
+        <p>OnionSkin.CP_OLD</p>
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          item.get(OnionSkin.CP_OLD);
+          item.get(OnionSkin.Item.CP_OLD);
+        </pre>
+      </section>
+    </section>
+
+    <section id="onionskin-item-cpprecompute">
+      <h1>OnionSkin.Item.CP_PRECOMPUTE</h1>
+      <p>
+        isMiss will eventually return true for a non expired cached before it
+        time** before expires<br>
+        ** time should be passed along with the policy on item.get as policyData
+      </p>
+      <section class="aliases">
+        <h1>Aliases</h1>
+        <p>OnionSkin.CP_PRECOMUPTE</p>
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          item.get(OnionSkin.CP_PRECOMUPTE, 180);
+          item.get(OnionSkin.Item.CP_PRECOMUPTE, 180);
+        </pre>
+      </section>
+    </section>
+    <section id="onionskin-item-cpnone">
+      <h1>OnionSkin.Item.CP_VALUE</h1>
+      <p>
+      Returns the value** specified if cache isLocked<br>
+      ** value should be passed along with the policy on item.get as policyData
+      </p>
+      <section class="aliases">
+        <h1>Aliases</h1>
+        <p>OnionSkin.CP_VALUE</p>
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          item.get(OnionSkin.CP_VALUE, 'foo');
+          item.get(OnionSkin.Item.CP_VALUE, 'not found');
+        </pre>
+      </section>
+    </section>
+    </section>
+  </section>
+
   <section id="onionskin-item-get">
     <h1>item.get([cachePolicy, [policyData]])</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
   <section id="onionskin-item-set">
     <h1>item.set(value, [expiration])</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-item-save">
     <h1>item.save(value, [expiration])</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
   <section id="onionskin-item-ismiss">
     <h1>item.isMiss()</h1>
