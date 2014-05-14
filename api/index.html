@@ -419,7 +419,8 @@
         </pre>
       </section>
     </section>
-    <section id="onionskin-item-cpnone">
+
+    <section id="onionskin-item-cpvalue">
       <h1>OnionSkin.Item.CP_VALUE</h1>
       <p>
       Returns the value** specified if cache isLocked<br>
@@ -438,29 +439,65 @@
         </pre>
       </section>
     </section>
-    </section>
   </section>
 
   <section id="onionskin-item-get">
-    <h1>item.get([cachePolicy, [policyData]])</h1>
+    <h1>item.get([cachePolicy], [policyData])</h1>
     <p>
+      Returns the actual data for the item's key based on the item's state
+      (wheter it's expired or locked), the cache policy and policy data
     </p>
 
     <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">cachePolicy</span>
+          (Integer): One of the 
+          <a href="#onionskin-item-cachepolicies">available cache policies</a>
+        </li>
+        <li>
+          <span class="name">policyData</span>
+          (*): The value acording to the
+          <a href="#onionskin-item-cachepolicies">cache policy</a>
+        </li>
+      </ol>
     </section>
 
     <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A Promise that will be resolved with the data associated with
+      the item's key or null if there wasn't anythin stored
     </section>
 
     <section class="example">
+      <h1>Example</h1>
+      <pre>
+        item.get(OnionSkin.CP_OLD);
+        item.get(OnionSkin.CP_PRECOMPUTE, 180);
+        item.get(OnionSkin.CP_VALUE, 'default value');
+      </pre>
     </section>
   </section>
+
   <section id="onionskin-item-set">
     <h1>item.set(value, [expiration])</h1>
     <p>
+      Saves the given value to item's key, during a given time or, by default,
+      until it is invalidated
     </p>
 
     <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">value</span>
+          (*): The value to be associated with the item's key
+        </li>
+        <li>
+          <span class="name">epiration</span>
+          (Integer): How long the cache will last before it expires, in seconds
+        </li>
     </section>
 
     <section class="returns">
@@ -484,20 +521,76 @@
     <section class="example">
     </section>
   </section>
+
   <section id="onionskin-item-ismiss">
     <h1>item.isMiss()</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
   <section id="onionskin-item-clear">
     <h1>item.clear()</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
   <section id="onionskin-item-lock">
     <h1>item.lock()</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
   <section id="onionskin-item-unlock">
     <h1>item.unlock()</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
   <section id="onionskin-item-islocked">
     <h1>item.isLocked()</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
 </section>
 
@@ -513,33 +606,139 @@
 
   <section id="onionskin-drivers-get">
     <h1>driver.get(key)</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-put">
     <h1>driver.put(key, [value, [expiration]])</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-delete">
     <h1>driver.delete(key)</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-flush">
     <h1>driver.flush()</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-lock">
     <h1>driver.lock(key)</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-unlock">
     <h1>driver.unlock(key)</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-islocked">
     <h1>driver.isLocked(key)</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
 </section>
 
 <section id="onionskin-drivers-utils">
   <section id="onionskin-drivers-utils-key">
     <h1>OnionSkin.Drivers.Utils.key([namespace], key)</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
+
   <section id="onionskin-drivers-utils-assemble">
     <h1>OnionSkin.Drivers.Utils.assemble(value, expiration, [key], [serialize])</h1>
+    <p>
+    </p>
+
+    <section class="arguments">
+    </section>
+
+    <section class="returns">
+    </section>
+
+    <section class="example">
+    </section>
   </section>
 </section>
 
