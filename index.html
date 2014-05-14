@@ -89,6 +89,8 @@ onionskin.get('my/key/path').catch(function (err) {
   // Data is either inexistent or expired
   // Generate new data, save it and return
   return slowFuncThatReturnsPromise().then(this.save);
+}).then(function (data) {
+  console.log(data);
 });</code></pre>
       <br>
       <p>
