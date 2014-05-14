@@ -3,6 +3,8 @@ body,
 body > nav,
 body > main {
   height: 100%;
+  overflow: scroll;
+  font-family: 'Consolas', 'Courier New', monospace;
 }
 
 body {
@@ -23,7 +25,7 @@ nav {
   position: absolute;
   top: 0;
   left: 0;
-  width: 180px;
+  width: 270px;
   padding-left: 20px;
   overflow: auto;
   background-color: #FCF4ED;
@@ -36,18 +38,28 @@ nav ul {
   list-style: none;
 }
 
+nav li {
+  margin: 5px 0;
+}
+
 nav ul li ul {
   margin-left: 20px;
   list-style: disc;
 }
 
+nav a {
+  color: #323330;
+  font-size: .85em;
+}
+
 main {
   position: absolute;
   top: 0;
-  left: 200px;
+  left: 290px;
   padding: 0;
   margin: 0;
-  width: calc(100% - 200px);
+  padding-left: 30px;
+  width: calc(100% - 320px);
 }
 
 section {
