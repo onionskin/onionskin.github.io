@@ -1,0 +1,77 @@
+body {
+  padding-top: 100px;
+}
+h2 {
+  font-size: 2em;
+}
+header,
+footer {
+  background-color: #8A3062;
+}
+
+header a,
+footer small {
+  color: #FCF4ED;
+}
+
+ul.nav li a:hover,
+ul.nav li.active a {
+  background-color: #F5DF51;
+  color: #323330;
+}
+
+.navbar-brand:hover {
+  color: #F5DF51
+}
+
+#content {
+  padding-bottom: 60px;
+  text-align: center;
+}
+
+h1.logo {
+  font-family: 'Raleway';
+  font-size: 6em;
+  font-weight: 300;
+  letter-spacing: -2px;
+  color: #323330;
+}
+
+p.lead {
+  color: #8A3062;
+}
+
+section {
+  background-color: #FCF4ED;
+}
+
+section p,
+section .content pre {
+  margin-right: 10%;
+}
+
+section ul li a,
+section p {
+  font-size: 1.2em;
+  margin-top: 1.5em;
+}
+
+section:last-of-type {
+  padding-bottom: 70px;
+}
+
+footer {
+  height: 40px;
+  padding: 10px 0;
+}
+
+footer small,
+footer iframe {
+  float: left;
+}
+footer small {
+  margin-top: 3px;
+}
+footer iframe {
+  float: right;
+}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>OnionSkin</title>
+<meta name="description" content="Multilayer Cache Manager for JavaScript">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="app/bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="app/bower_components/prism/themes/prism.css">
+<link rel="stylesheet" href="assets/main.css">
+<link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+</head>
+<body data-spy="scroll" data-taget=".navbar" data-offset="55">
+<header class="navbar navbar-fixed-top" id="top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="#" class="navbar-brand">OnionSkin</a>
+    </div>
+    <nav role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#getting-started">Getting started</a>
+        </li>
+        <li>
+          <a href="#examples">Examples</a>
+        </li>
+        <li>
+          <a href="#contact">Contact</a>
+        </li>
+        <li>
+          <a href="api">API</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="content" role="main">
+  <div class="container">
+    <img src="assets/onionskin.png" alt="OnionSkin logo">
+    <h1 class="logo">OnionSkin</h1>
+    <p class="lead">is a multi-layer cache manager library <br> that works with Node.js and vanilla javascript</p>
+    <iframe src="http://ghbtns.com/github-btn.html?user=onionskin&repo=onionskin&type=watch&count=true&size=medium"
+        allowtransparency="true" frameborder="0" scrolling="0" width="82" height="60"></iframe>
+    <iframe src="http://ghbtns.com/github-btn.html?user=onionskin&repo=onionskin&type=fork&count=true&size=medium"
+        allowtransparency="true" frameborder="0" scrolling="0" width="82" height="60"></iframe>
+    <iframe src="http://ghbtns.com/github-btn.html?user=onionskin&type=follow&count=true&size=small" allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="60px"></iframe>
+  </div>
+</main>
+
+<section id="getting-started">
+  <div class="container">
+    <div class="page-header">
+      <h1>Getting started</h1>
+    </div>
+
+    <div class="content">
+      <h2>Installation</h2>
+      <p>
+        You can install it with <a href="http://bower.io/" alt="Bower website" target="_blank">bower</a>
+      </p>
+      <pre>$ bower install onionskin </pre>
+      <p>
+        Then all you need to do is include it on the page and require it
+      </p>
+      <pre><code class="language-markup">&lt;script src="bower_components/onionskin/dist/onionskin.js"&gt;&lt;/script&gt;</code></pre>
+
+      <p>
+        Or you can install it via <a href="https://npmjs.org" alt="npm website" target="_blank">npm</a>
+      </p>
+      <pre>$ npm install onionskin </pre>
+
+      <p>
+        Either way, after that all you need to do is require it and start caching!
+      </p>
+      <pre><code class="language-javascript">var OnionSkin = require('onionskin');</code></pre>
+      <hr>
+
+      <h2>Basic Usage</h2>
+
+      <pre><code class="language-javascript">// Initialize a pool
+var pool = new OnionSkin();
+
+onionskin.get('my/key/path').catch(function (err) {
+  // Data is either inexistent or expired
+  // Generate new data, save it and return
+  return slowFuncThatReturnsPromise().then(this.save);
+});</code></pre>
+      <br>
+      <p>
+        The code above is a short version for:
+      </p>
+      <pre><code class="language-javascript">var item = pool.getItem('my/key/path');
+
+// OnionSkin.CP_NONE is the default Cache Policy
+item.get(OnionSkin.CP_NONE).then(function (data) {
+  item.isMiss().then(function (missed) {
+    if (missed) {
+      // Cache missing or expired
+      item.lock(); // Async lock to prevent stampede
+
+      actuallyFetchData(function (data) {
+        item.set(data); // Actually store data on cache (async)
+        callback(data); // Return data
+      });
+    } else {
+      // Cache is ok!
+      callback(data); // Return data
+    }
+  });
+});</code></pre>
+      <h2>Managing Drviers</h2>
+      <pre><code class="language-javascript">var ephemeral = new OnionSkin.Drivers.Ephemeral();
+var localStorage = new OnionSkin.Drivers.LocalStorage('my-custom-namespace');
+var indexedDB = new OnionSkin.Drivers.IndexedDB('my-custom-dbname');
+
+// Config info available below
+var redis = new OnionSkin.Drivers.Redis(); 
+var memcached = new OnionSkin.Drivers.Memcached();
+
+// The pool will read the drivers in the order they are specified (and write in reverse order)
+// All the unavailable drivers will be filtered out by default
+var clientPool = new OnionSkin([ephemeral, localStorage, indexedDB]);
+var serverPool = new OnionSkin([ephemeral, memcached, redis]);</pre></code>
+      <br>
+      <p>
+        OnionSkin's idea is to provide consistency exposing exactly the same
+        structure on the browser and on node.js, for that it is compiled with 
+        Browserfiy and exposes itself through require.
+      </p>
+
+      <p>
+      The only dependency right now is <a href="https://github.com/petkaantonov/bluebird" alt="Bluebird">Bluebird</a>, a promise library that is
+        also expose through require on browser.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="installation">
+  <div class="container">
+    <div class="page-header">
+    </div>
+    <div class="content">
+  </div>
+</section>
+
+<section id="examples">
+  <div class="container">
+    <div class="page-header">
+      <h1>Examples</h1>
+    </div>
+    <div class="content">
+      <p>
+        I've setup some pretty basic examples, available with the source code, you
+        can check it on <a href="http://github.com" alt="GitHub">GitHub</a>
+      </p>
+      <p>
+        You can check the Facebook API example running <a href="http://rawgit.com/onionskin/onionskin/master/examples/facebook.html" alt="OnionSkin examples on github" target="_blank">here</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="page-header">
+      <h1>Contact</h1>
+    </div>
+    <div class="content">
+      <ul>
+        <li>
+          <a href="http://twitter.com/onionskinjs" alt="OnionSkin's twitter">@onionskinjs</a>
+        </li>
+        <li>
+          <a href="mailto:contact@onionskin.io" alt="Mail">contact@onionskin.io</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <small>
+      OnionSkin was developed by
+      <a href="atwitter.com/tadeuzagallo" alt="Tadeu Zagallo">@tadeuzagallo</a>
+    </small>
+    <iframe src="http://ghbtns.com/github-btn.html?user=tadeuzagallo&type=follow&count=true&size=small" allowtransparency="true" frameborder="0" scrolling="0" width="250px" height="20px"></iframe>
+  </div>
+</footer>
+
+<a href="https://github.com/onionskin/onionskin"><img style="position: fixed; top: 0; right: 0; border: 0; z-index: 9999;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+
+<script src="app/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="app/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="app/bower_components/prism/prism.js"></script>
+<script>
+$(".navbar a[href^='#']").on('click', function(e) {
+   e.preventDefault();
+   var hash = this.hash;
+   var offset = $(this.hash).offset() || {};
+   $('html, body').animate({
+     scrollTop: (offset.top - 50) || 0
+   }, 300, function(){
+     window.location.hash = hash;
+   });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>API | OnionSkin</title>
+<meta name="description" content="API for OnionSkin - A Multilayer Cache Manager for JavaScript">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="app/bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="../app/bower_components/prism/themes/prism.css">
+<link rel="stylesheet" href="../assets/main.css">
+<link rel="stylesheet" href="../assets/docs.css">
+<link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<nav>
+  <img src="../assets/onionskin.png" alt="OnionSkin Logo">
+  <h1 class="logo">OnionSkin</h1>
+  <ul>
+    <li>
+      <a href="#">
+        OnionSkin
+      </a>
+      <ul>
+        <li>
+          <a href="#onionskin-pool">
+            Constructor -> OnionSkin.Pool
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-cachepolicies">
+            Cache Policies -> OnionSkin.Item Cache Policies
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#onionskin-pool">
+        OnionSkin.Pool
+      </a>
+      <ul>
+        <li>
+          <a href="#onionskin-pool-constructor">
+            Constructor
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-pool-getitem">
+            getItem
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-pool-flush">
+            flush
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-pool-get">
+            get
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#onionskin-item">
+        OnionSkin.Item
+      </a>
+      <ul>
+        <li>
+          <a href="#onionskin-item-constructor">
+            Constructor
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-get">
+            get
+          </a>
+        </li>
+          <a href="#onionskin-item-set">
+            set
+          </a>
+        <li>
+          <a href="#onionskin-item-save">
+            save
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-ismiss">
+            isMiss
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-clear">
+            clear
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-lock">
+            lock
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-unlock">
+            unlock
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-item-islocked">
+            isLocked
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#onionskin-drivers">
+        OnionSkin.Drivers
+      </a>
+      <ul>
+        <li>
+          <a href="#onionskin-drivers-get">
+            get
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-put">
+            put
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-delete">
+            delete
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-flush">
+            flush
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-lock">
+            lock
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-unlock">
+            unlock
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-islocked">
+            isLocked
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-utils">
+            Utils
+          </a>
+          <ul>
+            <li>
+              <a href="#onionskin-drivers-utils-key">
+                key
+              </a>
+            </li>
+            <li>
+              <a href="#onionskin-drivers-utils-assemble">
+                assemble
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<main>
+<div id="onionskin-pool">
+  <section id="onionskin-pool-constructor">
+  </section>
+  <section id="onionskin-pool-getitem">
+  </section>
+  <section id="onionskin-pool-flush">
+  </section>
+  <section id="onionskin-pool-get">
+  </section>
+</div>
+
+<div id="onionskin-item">
+  <section id="onionskin-item-constructor">
+  </section>
+  <section id="onionskin-item-get">
+  </section>
+  <section id="onionskin-item-set">
+  </section>
+  <section id="onionskin-item-save">
+  </section>
+  <section id="onionskin-item-ismiss">
+  </section>
+  <section id="onionskin-item-clear">
+  </section>
+  <section id="onionskin-item-lock">
+  </section>
+  <section id="onionskin-item-unlock">
+  </section>
+  <section id="onionskin-item-islocked">
+  </section>
+</div>
+
+<div id="onionskin-drivers">
+  <section id="onionskin-drivers-constructor">
+  </section>
+  <section id="onionskin-drivers-get">
+  </section>
+  <section id="onionskin-drivers-put">
+  </section>
+  <section id="onionskin-drivers-delete">
+  </section>
+  <section id="onionskin-drivers-flush">
+  </section>
+  <section id="onionskin-drivers-lock">
+  </section>
+  <section id="onionskin-drivers-unlock">
+  </section>
+  <section id="onionskin-drivers-islocked">
+  </section>
+</div>
+
+<div id="onionskin-drivers-utils">
+  <section id="onionskin-drivers-utils-key">
+  </section>
+  <section id="onionskin-drivers-utils-assemble">
+  </section>
+</div>
+
+</main>
+</body>
+</html>

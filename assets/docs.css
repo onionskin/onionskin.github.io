@@ -1,0 +1,55 @@
+html,
+body,
+body > nav,
+body > main {
+  height: 100%;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+nav img {
+  width: 120px;
+  margin-top: 50px;
+}
+
+h1.logo {
+  font-size: 2em;
+}
+
+nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  padding-left: 20px;
+  overflow: auto;
+  background-color: #FCF4ED;
+  border-right: 1px solid #8A3062;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+nav ul li ul {
+  margin-left: 20px;
+  list-style: disc;
+}
+
+main {
+  position: absolute;
+  top: 0;
+  left: 200px;
+  padding: 0;
+  margin: 0;
+  width: calc(100% - 200px);
+}
+
+section {
+  background: none;
+}
