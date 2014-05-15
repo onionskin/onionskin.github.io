@@ -664,13 +664,100 @@
 
 <section id="onionskin-drivers">
   <h1>OnionSkin has 5 drivers</h1>
-  <ul>
-    <li>new OnionSkin.Drivers.Ephemeral()</li>
-    <li>new OnionSkin.Drivers.LocalStorage()</li>
-    <li>new OnionSkin.Drivers.IndexedDB()</li>
-    <li>new OnionSkin.Drivers.Memcached()</li>
-    <li>new OnionSkin.Drivers.Redis()</li>
-  </ul>
+  <p>
+  </p>
+
+  <section id="onionskin-drivers-ephemeral">
+    <h1>new OnionSkin.Drivers.Ephemeral()</h1>
+    <p>
+      Ephemeral is the in memory cache driver
+    </p>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        var driver = new OnionSkin.Drivers.Ephemeral();
+      </pre>
+    </section>
+  </section>
+
+  <section id="onionskin-drivers-localstorage">
+    <h1>new OnionSkin.Drivers.LocalStorage([namespace])</h1>
+    <p>
+      The driver to store cache on the browser's localStorage
+    </p>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        new OnionSkin.Drivers.LocalStorage();
+        new OnionSkin.Drivers.LocalStorage('my-custom-namespace');
+      </pre>
+    </section>
+  </section>
+
+  <section id="onionskin-drivers-indexeddb">
+    <h1>new OnionSkin.Drivers.IndexedDB([namespace])</h1>
+    <p>
+      Driver to store the cache on browser's IndexedDB
+    </p>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        new OnionSkin.Drivers.IndexedDB();
+        new OnionSkin.Drivers.IndexedDB('my-custom-namespace');
+      </pre>
+    </section>
+  </section>
+
+  <section id="onionskin-drivers-memcached">
+    <h1>new OnionSkin.Drivers.Memcached([serverLocations], [options])</h1>
+    <p>
+      Driver to store cache on Memcached<br>
+      It encapsulates <a href="https://github.com/3rd-Eden/node-memcached">node-memcached</a> and the constuctor arguments
+      will be passed to its constructor.
+    </p>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        new OnionSkin.Drivers.Memcached();
+        new OnionSkin.Drivers.Memcached('192.168.0.102:11212');
+        new OnionSkin.Drivers.Memcached({
+          '192.168.0.102:11212': 1,
+          '192.168.0.103:11212': 2,
+          '192.168.0.104:11212': 1
+        });
+
+        new OnionSkin.Drivers.Memcached('localhost:11212', {
+          retries: 10,
+          retry: 10000,
+          remove: true,
+          failOverServers: ['192.168.0.103:11212']
+        });
+      </pre>
+    </section>
+  </section>
+
+  <section id="onionskin-drivers-redis">
+    <h1>new OnionSkin.Drivers.Redis([port], [host], [options])</h1>
+    <p>
+      Driver to store cache on <a href="http://redis.io/">Redis</a><br>
+
+      It encapsulates <a href="https://github.com/mranney/node_redis">node-redis</a> and the constuctor arguments
+      will be passed to <a href="https://github.com/mranney/node_redis#rediscreateclientport-host-options">redis.createClient</a>
+    </p>
+
+    <section class="example">
+      <h1>Example</h1>
+      <pre>
+        new OnionSkin.Drivers.Redis();
+        new OnionSkin.Drivers.Redis('/tmp/redis.sock');
+        new OnionSkin.Drivers.Redis('127.0.0.1', 6379, { detect_buffers: true });
+      </pre>
+    </section>
+  </section>
 
   <section id="onionskin-drivers-get">
     <h1>driver.get(key)</h1>
