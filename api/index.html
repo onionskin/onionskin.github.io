@@ -495,101 +495,169 @@
           (*): The value to be associated with the item's key
         </li>
         <li>
-          <span class="name">epiration</span>
+          <span class="name">expiration</span>
           (Integer): How long the cache will last before it expires, in seconds
         </li>
+      </ol>
     </section>
 
     <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A Promise that will be resolved when the value has been written
+      to all drivers
     </section>
 
     <section class="example">
+      <h1>Example</h1>
+      <pre>
+        pool.get('my/key').set('my value');
+        pool.get('my/other/key').set('my other value', 1800);
+      </pre>
     </section>
   </section>
 
   <section id="onionskin-item-save">
     <h1>item.save(value, [expiration])</h1>
     <p>
+      Alias to set to be used on chaining
+      It will call set and return the value next
+      For compatibility reasons the expiration is also accepted
     </p>
 
     <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">value</span>
+          (*): The value to be associated with the item's key
+        </li>
+        <li>
+          <span class="name">expiration</span>
+          (Integer): How long the cache will last before it expires, in seconds
+        </li>
+      </ol>
     </section>
 
     <section class="returns">
+      <h1>Returns</h1>
+      (*): The value received as the first argument
     </section>
 
     <section class="example">
+      <h1>Example</h1>
+      <pre>
+        item.get('key').catch(function (err) {
+          //cache is missing (expired or non existing)
+          return getData().then(this.save);
+        });
+      </pre>
     </section>
   </section>
 
   <section id="onionskin-item-ismiss">
     <h1>item.isMiss()</h1>
     <p>
+      Check whether a stored value for the item's key is still valid to be used
+      or it needs to be regenerated
     </p>
 
-    <section class="arguments">
-    </section>
-
     <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A Promise that will be resolved with a boolean value indicating
+      the cache state
     </section>
 
     <section class="example">
+      <pre>
+        item.isMiss().then(function (missed) {
+          if (missed) {
+            regenerateData();
+          }
+        });
+      </pre>
     </section>
   </section>
+
   <section id="onionskin-item-clear">
     <h1>item.clear()</h1>
     <p>
+      Clear the value associated with the item's key
     </p>
 
-    <section class="arguments">
-    </section>
-
     <section class="returns">
+      <h1>Return</h1>
+      (Promise): A Promise that will be resolved when all the drivers have been
+      cleared
     </section>
 
     <section class="example">
+      <pre>
+        pool.get('my/key').clear().then(function () {
+          // there is no value associated with my/key anymore
+        });
+      </pre>
     </section>
   </section>
+
   <section id="onionskin-item-lock">
     <h1>item.lock()</h1>
     <p>
+      Locks the item's key indicating that its cache is already being regenerated
     </p>
 
-    <section class="arguments">
-    </section>
-
     <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A Promise that will be resolved when the item is lock has been
+      written to all drivers
     </section>
 
     <section class="example">
+      <pre>
+        pool.get('my/key').lock().then(function () {
+          // item is already locked for all drivers
+        });
+      </pre>
     </section>
   </section>
+
   <section id="onionskin-item-unlock">
     <h1>item.unlock()</h1>
     <p>
+      Unlocks the item's key indicating that its cache has already been written
     </p>
 
-    <section class="arguments">
-    </section>
-
     <section class="returns">
+      <h1>Returns</h1>
+      (Promise): A Promise that will be resolved when the is lock has been
+      removed from all drivers
     </section>
 
     <section class="example">
+      <pre>
+        pool.get('my/key').unlock().then(function () {
+          // item is already unlocked in all drivers
+        });
+      </pre>
     </section>
   </section>
   <section id="onionskin-item-islocked">
     <h1>item.isLocked()</h1>
     <p>
+      Check if the item's key is currently locked by another instance 
     </p>
 
-    <section class="arguments">
-    </section>
-
     <section class="returns">
+      <h1>Return</h1>
+      (Promise): A Promise that will be resolved with a boolean value
+      indicating wheter this key is locked or not
     </section>
 
     <section class="example">
+      <pre>
+        pool.getItem('my/key').isLocked().then(function (locked) {
+          // (Boolean): locked indicates the item's key state
+        });
+      </pre>
     </section>
   </section>
 </section>
