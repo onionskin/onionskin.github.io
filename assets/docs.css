@@ -14,11 +14,13 @@ body {
 
 nav img {
   width: 120px;
-  margin-top: 50px;
+  margin: 50px  0 0 48px;
 }
 
 h1.logo {
+  width: 250px;
   font-size: 2em;
+  margin-left: 40px;
 }
 
 nav {
