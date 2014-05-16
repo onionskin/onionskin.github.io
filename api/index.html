@@ -74,7 +74,30 @@
           <a href="#onionskin-item-cachepolicies">
             Cache Policies
           </a>
+          <ul>
+            <li>
+              <a href="#onionskin-item-cpnone">
+                CP_NONE
+              </a>
+            </li>
+            <li>
+              <a href="#onionskin-item-cpold">
+                CP_OLD
+              </a>
+            </li>
+            <li>
+              <a href="#onionskin-item-cpprecompute">
+                CP_PRECOMPUTE
+              </a>
+            </li>
+            <li>
+              <a href="#onionskin-item-cpvalue">
+                CP_VALUE
+              </a>
+            </li>
+          </ul>
         </li>
+
         <li>
           <a href="#onionskin-item-get">
             get
@@ -123,10 +146,38 @@
       </a>
       <ul>
         <li>
-          <a href="#onionskin-drivers-get">
-            get
+          <a href="#onionskin-drivers-ephemeral">
+            Epehemeral
           </a>
         </li>
+        <li>
+          <a href="#onionskin-drivers-localstorage">
+            LocalStorage
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-indexeddb">
+            IndexedDB
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-memcached">
+            Memcached
+          </a>
+        </li>
+        <li>
+          <a href="#onionskin-drivers-redis">
+            Redis
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#onionskin-drivers-api">
+        Drivers API
+      </a>
+
+      <ul>
         <li>
           <a href="#onionskin-drivers-put">
             put
@@ -496,7 +547,8 @@
         </li>
         <li>
           <span class="name">expiration</span>
-          (Integer): How long the cache will last before it expires, in seconds
+          (Integer|Date): How long the cache will last before it expires,
+          in seconds, or the Date when it expires
         </li>
       </ol>
     </section>
@@ -533,7 +585,8 @@
         </li>
         <li>
           <span class="name">expiration</span>
-          (Integer): How long the cache will last before it expires, in seconds
+          (Integer|Date): How long the cache will last before it expires,
+          in seconds, or the Date when it expires
         </li>
       </ol>
     </section>
@@ -665,7 +718,22 @@
 <section id="onionskin-drivers">
   <h1>OnionSkin has 5 drivers</h1>
   <p>
+    You can combine any number of Drivers and pass to the OnionSkin constructor
+    in the order you want then to be checked<br>
+    OnionSkin also filters out unavailable drivers so that you don't have to 
+    worry with that across different browsers
+    
   </p>
+
+  <pre>
+    var pool = new OnionSkin([
+      new OnionSkin.Drivers.Ephemeral(),
+      new OnionSkin.Drivers.LocalStorage(),
+      new OnionSkin.Drivers.IndexedDB(),
+      new OnionSkin.Drivers.Memcached(),
+      new OnionSkin.Drivers.Redis()
+    ]);
+  </pre>
 
   <section id="onionskin-drivers-ephemeral">
     <h1>new OnionSkin.Drivers.Ephemeral()</h1>
@@ -714,9 +782,11 @@
   <section id="onionskin-drivers-memcached">
     <h1>new OnionSkin.Drivers.Memcached([serverLocations], [options])</h1>
     <p>
-      Driver to store cache on Memcached<br>
-      It encapsulates <a href="https://github.com/3rd-Eden/node-memcached">node-memcached</a> and the constuctor arguments
-      will be passed to its constructor.
+      Driver to store cache on
+      <a href="http://memcached.org/">Memcached</a><br>
+      It encapsulates
+      <a href="https://github.com/3rd-Eden/node-memcached">node-memcached</a>
+      and the constuctor arguments will be passed to its constructor.
     </p>
 
     <section class="example">
@@ -759,140 +829,335 @@
     </section>
   </section>
 
-  <section id="onionskin-drivers-get">
-    <h1>driver.get(key)</h1>
-    <p>
-    </p>
+  <section id="onionskin-drivers-api">
+    <h1>All Drivers implement the following API</h1>
 
-    <section class="arguments">
+    <section id="onionskin-drivers-get">
+      <h1>driver.get(key)</h1>
+      <p>
+        Get the value associated with the given key
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">key</span>
+            (String|Array): the key where the value will be searched
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved with the value associated with
+        the key or null if nothing has been found
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Drivers.Ephemeral();
+          driver.get('my/key').then(function (data) {
+            // do something with data...
+          });
+
+          driver.get(['my', 'key']).then(function (data) {
+            // do some other thing with data...
+          });
+        </pre>
+      </section>
     </section>
 
-    <section class="returns">
+    <section id="onionskin-drivers-put">
+      <h1>driver.put(key, value, [expiration])</h1>
+      <p>
+        Associates a value (and possibly its expiration time) with a key on the
+        driver
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">key</span>
+            (String|Array): The key where the value will be stored
+          </li>
+
+          <li>
+            <span class="name">value</span>
+            (*): The value to be associated with key
+          </li>
+
+          <li>
+            <span class="name">expiration</span>
+            (Integer): The duration of the cache (in seconds) - Note: not on every
+            driver the value will actually be cleared after it is expired, the
+            cache validation is made by
+            <a href="#onionskin-item">Item</a>
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved when the value has finished
+        writting the value to the key
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Drivers.LocalStorage();
+          driver.put('my/key', 'my value', 1800).then(function () {
+            // The value has been written
+          });
+        </pre>
+      </section>
     </section>
 
-    <section class="example">
+    <section id="onionskin-drivers-delete">
+      <h1>driver.delete(key)</h1>
+      <p>
+        Actually remove a key and all its subpaths from driver 
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">key</span>
+            (String|Array): The key to be deleted from driver
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved when the key and all it subkeys
+        have been removed from the driver
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Drivers.IndexedDB();
+          driver.delete(['my', 'key']).then(function () {
+            // The key has been removed
+          });
+        </pre>
+      </section>
+    </section>
+
+    <section id="onionskin-drivers-flush">
+      <h1>driver.flush()</h1>
+      <p>
+        Flush the entire driver data
+      </p>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved when the entire data has been
+        flushed
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Drivers.Memcached();
+          driver.flush().then(function () {
+            // OK, now driver is empty
+          });
+        </pre>
+      </section>
+    </section>
+
+    <section id="onionskin-drivers-lock">
+      <h1>driver.lock(key)</h1>
+      <p>
+        Writes a lock for a given key in the driver
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">key</span>
+            (String|Array): The key to be locked
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved when the lock has been written
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Driver.Redis();
+          driver.lock(['my', 'key']).then(function () {
+            // Key is now locked
+          });
+        </pre>
+      </section>
+    </section>
+
+    <section id="onionskin-drivers-unlock">
+      <h1>driver.unlock(key)</h1>
+      <p>
+        Removes a lock for a given key from the driver
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">key</span>
+            (String|Array): The key to be unlocked
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved when the lock has been removed
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Driver.Redis();
+          driver.unlock(['my', 'key']).then(function () {
+            // Key is now unlocked
+          });
+        </pre>
+      </section>
+    </section>
+
+    <section id="onionskin-drivers-islocked">
+      <h1>driver.isLocked(key)</h1>
+      <p>
+        Check whether a key is locked or not
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">key</span>
+            (String|Array): The key to be unlocked
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (Promise): A Promise that will be resolved with a boolean value indicating
+        the key's lock state
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          var driver = new OnionSkin.Drivers.Memcached();
+          driver.isLocked('my-key').then(function (locked) {
+            if (locked) {
+              // Cache is locked, what now?
+            } else {
+              // Cache is unlocked, keep going...
+            }
+          });
+        </pre>
+      </section>
     </section>
   </section>
 
-  <section id="onionskin-drivers-put">
-    <h1>driver.put(key, [value, [expiration]])</h1>
-    <p>
-    </p>
+  <section id="onionskin-drivers-utils">
+    <h1>OnionSkin Drivers Utils</h1>
+    <p>Basic helper functions to ensure consistency through the drivers</p>
 
-    <section class="arguments">
+    <section id="onionskin-drivers-utils-key">
+      <h1>OnionSkin.Drivers.Utils.key([namespace], key)</h1>
+      <p>
+        Generate consistent keys based on namespace and key
+      </p>
+
+      <section class="arguments">
+        <h1>Arguments</h1>
+        <ol>
+          <li>
+            <span class="name">namespace</span>
+            (String): The namespace where the key belongs
+          </li>
+          <li>
+            <span class="name">key</span>
+            (String|Array): The key to be parsed
+          </li>
+        </ol>
+      </section>
+
+      <section class="returns">
+        <h1>Returns</h1>
+        (String): The generated key
+      </section>
+
+      <section class="example">
+        <h1>Example</h1>
+        <pre>
+          OnionSkin.Drivers.Utils.key('my/key');
+          OnionSkin.Drivers.Utils.key(['my', 'key']);
+          OnionSkin.Drivers.Utils.key('my-namespace', 'my/key');
+          OnionSkin.Drivers.Utils.key('my-namespace', ['my', 'key']);
+        </pre>
+      </section>
     </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
-
-  <section id="onionskin-drivers-delete">
-    <h1>driver.delete(key)</h1>
-    <p>
-    </p>
-
-    <section class="arguments">
-    </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
-
-  <section id="onionskin-drivers-flush">
-    <h1>driver.flush()</h1>
-    <p>
-    </p>
-
-    <section class="arguments">
-    </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
-
-  <section id="onionskin-drivers-lock">
-    <h1>driver.lock(key)</h1>
-    <p>
-    </p>
-
-    <section class="arguments">
-    </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
-
-  <section id="onionskin-drivers-unlock">
-    <h1>driver.unlock(key)</h1>
-    <p>
-    </p>
-
-    <section class="arguments">
-    </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
-
-  <section id="onionskin-drivers-islocked">
-    <h1>driver.isLocked(key)</h1>
-    <p>
-    </p>
-
-    <section class="arguments">
-    </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
-</section>
-
-<section id="onionskin-drivers-utils">
-  <section id="onionskin-drivers-utils-key">
-    <h1>OnionSkin.Drivers.Utils.key([namespace], key)</h1>
-    <p>
-    </p>
-
-    <section class="arguments">
-    </section>
-
-    <section class="returns">
-    </section>
-
-    <section class="example">
-    </section>
-  </section>
 
   <section id="onionskin-drivers-utils-assemble">
-    <h1>OnionSkin.Drivers.Utils.assemble(value, expiration, [key], [serialize])</h1>
+    <h1>OnionSkin.Drivers.Utils.assemble(value, [expiration], [key], [serialize])</h1>
     <p>
+      Generates a consistent value to be stored by the drivers
     </p>
 
     <section class="arguments">
+      <h1>Arguments</h1>
+      <ol>
+        <li>
+          <span class="name">value</span>
+          (*): The value that will be associated with the key
+        </li>
+        <li>
+          <span class="name">expiration</span>
+          (Integer): The expiration time or Date for the value
+        </li>
+        <li>
+          <span class="name">key</span>
+          (String): The already parsed key - used only for IndexedDB where the
+          key is stored within the value
+        </li>
+        <li>
+          <span class="name">serialize</span>
+          (Boolean): Wether or not it should return the string representation of
+          the object - defaults to true
+        </li>
+      </ol>
     </section>
 
     <section class="returns">
+      <h1>Returns</h1>
+      (String|Object): The normalized object, either as string, if serialize is
+      true, or as an object otherwise
     </section>
 
     <section class="example">
+      <h1>Example</h1>
+      <pre>
+        OnionSkin.Drivers.Utils.assemble('my value');
+        OnionSkin.Drivers.Utils.assemble('my value', 180);
+        OnionSkin.Drivers.Utils.assemble('my value', 180, 'my/key');
+        OnionSkin.Drivers.Utils.assemble('my value', 180, 'my/key', false);
+      </pre>
     </section>
   </section>
 </section>
