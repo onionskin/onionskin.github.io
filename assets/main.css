@@ -75,3 +75,10 @@ footer small {
 footer iframe {
   float: right;
 }
+
+.navbar-toggle {
+  margin-right: 0px;
+}
+.icon-bar {
+  background: white;
+}
