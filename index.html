@@ -87,7 +87,7 @@
       <pre><code class="language-javascript">// Initialize a pool
 var pool = new OnionSkin();
 
-onionskin.get('my/key/path').catch(function (err) {
+pool.get('my/key/path').catch(function (err) {
   // Data is either inexistent or expired
   // Generate new data, save it and return
   return slowFuncThatReturnsPromise().then(this.save);
