@@ -88,7 +88,9 @@
       <pre><code class="language-javascript">// Initialize a pool
 var pool = new OnionSkin();
 
-pool.get('my/key/path').catch(function (err) {
+// Update: cache generation function should be passed as second parameter
+//  Although the `catch` form is still supported, it is not guaranteed to unlock the cache
+pool.get('my/key/path', function (err) {
   // Data is either inexistent or expired
   // Generate new data, save it and return
   return slowFuncThatReturnsPromise().then(this.save);
