@@ -92,8 +92,7 @@ var pool = new OnionSkin();
 //  Although the `catch` form is still supported, it is not guaranteed to unlock the cache
 pool.get('my/key/path', function (err) {
   // Data is either inexistent or expired
-  // Generate new data, save it and return
-  return slowFuncThatReturnsPromise().then(this.save);
+  return slowFuncThatReturnsPromise();
 }).then(function (data) {
   console.log(data);
 });</code></pre>
@@ -103,16 +102,19 @@ pool.get('my/key/path', function (err) {
       </p>
       <pre><code class="language-javascript">var item = pool.getItem('my/key/path');
 
-// OnionSkin.CP_NONE is the default Cache Policy
-item.get(OnionSkin.CP_NONE).then(function (data) {
-  item.isMiss().then(function (missed) {
-    if (missed) {
+
+Promise.props({
+  // OnionSkin.CP_NONE is the default Cache Policy
+  data: item.get(OnionSkin.CP_NONE),
+  missed: item.isMiss()
+}).then(function (result) {
+    if (result.missed) {
       // Cache missing or expired
       item.lock(); // Async lock to prevent stampede
 
       actuallyFetchData(function (data) {
-        item.set(data); // Actually store data on cache (async)
-        callback(data); // Return data
+        item.set(result.data); // Actually store data on cache (async)
+        callback(result.data); // Return data
       });
     } else {
       // Cache is ok!
